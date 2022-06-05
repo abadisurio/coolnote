@@ -1,10 +1,13 @@
 import React from 'react'
-import NoteCard from '../components/NoteCard'
+import CardGrid from '../components/CardGrid'
 
 const Home = () => {
     return (
-        <div>
-            <NoteCard />
+        <div className='bg-gradient-to-r from-slate-900 to-indigo-900 text-white h-screen'>
+            <div className='container mx-auto pt-5'>
+
+                <CardGrid />
+            </div>
         </div>
     )
 }
