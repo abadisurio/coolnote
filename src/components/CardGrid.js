@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getInitialData } from '../utils'
 import { SearchIcon } from '@heroicons/react/solid'
+import NoteCard from './NoteCard'
 
 const initialData = [{
     id: 0,
@@ -60,12 +61,17 @@ const CardGrid = () => {
         alert('Catatan baru berhasil disimpan')
     }
 
+    const handleDelete = (id) => {
+        setData(data.filter(item => item.id !== id))
+
+    }
+
     return (
         <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4'>
             {isLoading && <h1>Loading</h1>}
             <div className='flex flex-col'>
                 <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex flex-row content-center'>
-                    <SearchIcon class="h-5 w-5 self-center mr-3" />
+                    <SearchIcon className="h-5 w-5 self-center mr-3" />
                     <input className='flex bg-transparent w-full text-xl text-sm' name='search' value={searchKey} onChange={handleSearch} onFocus={(e) => e.target.select()} placeholder="Search" />
                 </div>
                 <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex-1 flex flex-col'>
@@ -75,16 +81,14 @@ const CardGrid = () => {
 
                 </div>
             </div>
+            {data.length === 0 && (
+                <div className='rounded-xl border border-white m-2 p-3 flex h-64'>
+
+                    <h1 className='w-full self-center text-center'>Tidak ada data</h1>
+                </div>
+            )}
             {(searchKey === "" ? data : searchedNote).map(item => {
-                // console.log(item)
-                return (
-                    <div key={item.id} className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 h-64'>
-                        <h1 className='text-xl mb-3'>{item.title}</h1>
-                        <p className='line-clamp-3'>
-                            {item.body}
-                        </p>
-                    </div>
-                )
+                return <NoteCard item={item} action={{ handleDelete }} />
             })}
         </div>
     )
