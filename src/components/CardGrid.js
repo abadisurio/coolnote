@@ -11,7 +11,7 @@ const initialData = [{
     createdAt: ""
 }]
 const initialNewNote = {
-    id: Date.now(),
+    id: 0,
     title: "Start to write here",
     body: "Something great",
     archived: false,
@@ -54,7 +54,7 @@ const CardGrid = () => {
         setData(prevState => {
             return [
                 ...prevState,
-                newNote
+                { ...newNote, id: Date.now() }
             ]
         })
         setNewNote(initialNewNote)
@@ -65,6 +65,8 @@ const CardGrid = () => {
         setData(data.filter(item => item.id !== id))
 
     }
+
+    const isSaveDisabled = newNote.body.length > 50
 
     return (
         <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4'>
@@ -77,7 +79,10 @@ const CardGrid = () => {
                 <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex-1 flex flex-col'>
                     <input className='bg-transparent w-full text-xl mb-3' name='title' value={newNote.title} onChange={handleChange} />
                     <textarea className='bg-transparent w-full flex-1 mb-3' name='body' value={newNote.body} onChange={handleChange} rows={3} />
-                    <button className='bg-green-500/80 px-2 py-1 rounded-lg ' onClick={saveNote}>Save</button>
+                    <div className="flex justify-between items-center">
+                        <span>{newNote.body.length}/50</span>
+                        <button className={`bg-green-500/${isSaveDisabled ? 0 : 80} px-2 py-1 rounded-lg`} disabled={isSaveDisabled} onClick={saveNote}>{isSaveDisabled ? 'Kurangi karakter' : 'Save'}</button>
+                    </div>
 
                 </div>
             </div>
