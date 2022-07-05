@@ -63,39 +63,67 @@ const CardGrid = () => {
 
     const handleDelete = (id) => {
         setData(data.filter(item => item.id !== id))
+    }
 
+    const handleArchive = (id) => {
+        setData(
+            data.map(item => item.id === id ? ({ ...item, archived: !item.archived }) : item)
+        )
     }
 
     const isSaveDisabled = newNote.body.length > 50
 
     return (
-        <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4'>
-            {isLoading && <h1>Loading</h1>}
-            <div className='flex flex-col'>
-                <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex flex-row content-center'>
-                    <SearchIcon className="h-5 w-5 self-center mr-3" />
-                    <input className='flex bg-transparent w-full text-xl text-sm' name='search' value={searchKey} onChange={handleSearch} onFocus={(e) => e.target.select()} placeholder="Search" />
-                </div>
-                <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex-1 flex flex-col'>
-                    <input className='bg-transparent w-full text-xl mb-3' name='title' value={newNote.title} onChange={handleChange} />
-                    <textarea className='bg-transparent w-full flex-1 mb-3' name='body' value={newNote.body} onChange={handleChange} rows={3} />
-                    <div className="flex justify-between items-center">
-                        <span>{newNote.body.length}/50</span>
-                        <button className={`bg-green-500/${isSaveDisabled ? 0 : 80} px-2 py-1 rounded-lg`} disabled={isSaveDisabled} onClick={saveNote}>{isSaveDisabled ? 'Kurangi karakter' : 'Save'}</button>
-                    </div>
-
+        <>
+            <div className='flex flex-col '>
+                <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex flex-row content-center '>
+                    <h1>My Notes</h1>
                 </div>
             </div>
-            {data.length === 0 && (
-                <div className='rounded-xl border border-white m-2 p-3 flex h-64'>
+            <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4'>
 
-                    <h1 className='w-full self-center text-center'>Tidak ada data</h1>
+                {isLoading && <h1>Loading</h1>}
+                <div className='flex flex-col'>
+                    <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex flex-row content-center'>
+                        <SearchIcon className="h-5 w-5 self-center mr-3" />
+                        <input className='flex bg-transparent w-full text-xl text-sm' name='search' value={searchKey} onChange={handleSearch} onFocus={(e) => e.target.select()} placeholder="Search" />
+                    </div>
+                    <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex-1 flex flex-col'>
+                        <input className='bg-transparent w-full text-xl mb-3' name='title' value={newNote.title} onChange={handleChange} />
+                        <textarea className='bg-transparent w-full flex-1 mb-3' name='body' value={newNote.body} onChange={handleChange} rows={3} />
+                        <div className="flex justify-between items-center">
+                            <span>{newNote.body.length}/50</span>
+                            <button className={`bg-green-500/${isSaveDisabled ? 0 : 80} px-2 py-1 rounded-lg`} disabled={isSaveDisabled} onClick={saveNote}>{isSaveDisabled ? 'Kurangi karakter' : 'Save'}</button>
+                        </div>
+
+                    </div>
                 </div>
-            )}
-            {(searchKey === "" ? data : searchedNote).map(item => {
-                return <NoteCard item={item} action={{ handleDelete }} />
-            })}
-        </div>
+                {data.length === 0 && (
+                    <div className='rounded-xl border border-white m-2 p-3 flex h-64'>
+                        <h1 className='w-full self-center text-center'>Tidak ada data</h1>
+                    </div>
+                )}
+                {(searchKey === "" ? data : searchedNote).map(item => {
+                    return !item.archived && <NoteCard item={item} action={{ handleDelete, handleArchive }} />
+                })}
+            </div>
+            <div className='flex flex-col '>
+                <div className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 flex flex-row content-center '>
+                    <h1>Archived</h1>
+                </div>
+            </div>
+            <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4'>
+                {(searchKey === "" ? data : searchedNote).map(item => {
+                    return item.archived && <NoteCard item={item} action={{ handleDelete, handleArchive }} />
+                })}
+                {data.length === 0 && (
+                    <div className='rounded-xl border border-white m-2 p-3 flex h-64'>
+
+                        <h1 className='w-full self-center text-center'>Tidak ada data</h1>
+                    </div>
+                )}
+            </div>
+        </>
     )
 }
 
