@@ -5,7 +5,7 @@ const NoteCard = ({ item, action }) => {
     console.log('item', item)
     return (
         <div key={item.id} className='rounded-xl border border-white m-2 p-3 hover:bg-slate-700 transition duration-150 h-64 flex flex-col'>
-            <h1 className='text-xl mb-3'>{item.title}</h1>
+            <h1 className='text-xl'>{item.title} {item.archived && (<span className='text-xs text-slate-500 rounded'>archived</span>)}</h1>
             <div className="flex-1">
                 <p className='line-clamp-3 text-sm'>
                     {item.body}
